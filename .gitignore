@@ -1,0 +1,25 @@
+###########
+## Unity
+###########
+
+Temp/
+Library/*.*
+Library/**
+!Library/BuildPlayer.prefs
+!Library/*.asset
+obj/
+*.suo
+*.user
+*.pidb
+*.userprefs
+
+############
+## Windows
+############
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
