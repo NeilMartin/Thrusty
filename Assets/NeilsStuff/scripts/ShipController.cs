@@ -73,7 +73,7 @@ public class ShipController : MonoBehaviour
 		}
 		else
 		{
-			// air controls
+			// air turn controls
 			float spinRange = -Mathf.Clamp(Input.GetAxis("Horizontal"), -1.0f, 1.0f);
 			float desiredSpin = spinRange * (2.0f * Mathf.PI * turnsPerSecond);
 			float currentSpin = spinnerRigidbody.angularVelocity.z;
@@ -82,6 +82,11 @@ public class ShipController : MonoBehaviour
 			mSpinPower = deltaSpin * turnPower;
 			spinnerRigidbody.AddTorque( new Vector3( 0.0f, 0.0f, mSpinPower ) );
 		}
+		
+		// thrust controls
+		float thrust = Mathf.Clamp(Input.GetAxis("Vertical"), 0.0f, 1.0f);
+		Vector3 dir = transform.up;
+		spinnerRigidbody.AddForce( dir * thrust * forwardAcc );
     }
 }
 
