@@ -4,35 +4,48 @@ using System.Collections;
 public class CaveSpawner : MonoBehaviour 
 {
 	public GameObject cavePiece;
+	public GameObject player;
 	
-	private int gridSizeX = 10;
-	private int gridSizeY = 10;
+	private static float range = 30.0f;
+	private static int gridSizeX = 30;
+	private static int gridSizeY = 30;
+	private static int centreGridPosX = gridSizeX/2;
+	private static int centreGridPosY = gridSizeY/2;
+	private static float cellSize = 10.0f;
 	private int[,] caveGrid;
 	private GameObject[,] cellObject;
-	private int centreGridPosX = 5;
-	private int centreGridPosY = 5;
-	private float cellSize = 10.0f;
 	private int oldCellStartX = 10;
 	private int oldCellStartY = 10;
 	private int oldCellEndX = -1;
 	private int oldCellEndY = -1;
+	private int spawnedPosX = 0;
+	private int spawnedPosY = 0;
+	
 		
 	// Use this for initialization
 	void Start () 
 	{
 		GenerateCaveGrid();
-		SpawnGrid( 0.0f, 0.0f, 50.0f );
+		SpawnGrid( 0.0f, 0.0f, range );
 	}
 	
 	private void GenerateCaveGrid()
 	{
+		float density = 30.0f;
 		caveGrid = new int[gridSizeX,gridSizeY];
 		for(int x=0;x<gridSizeX;++x)
 		{
 			for(int y=1;y<gridSizeY;++y)
 			{
-				caveGrid[x,y] = Random.Range(0,100)&1;
+				caveGrid[x,y] = (Random.Range(0,100)<density)?1:0;
 			}
+		}
+		for(int x=0;x<gridSizeX;++x)
+		{
+			caveGrid[x,0] = 1;
+			caveGrid[0,x] = 1;
+			caveGrid[x,gridSizeY-1] = 1;
+			caveGrid[gridSizeX-1,x] = 1;
 		}
 		cellObject = new GameObject[gridSizeX,gridSizeY]; // how do I create an array of nulls?
 		for(int x=0;x<gridSizeX;++x)
@@ -54,6 +67,7 @@ public class CaveSpawner : MonoBehaviour
 		int cellStartY = Mathf.Max( cellPosY-cellRange, 0 );
 		int cellEndX = Mathf.Min( cellPosX+cellRange, gridSizeX-1 );
 		int cellEndY = Mathf.Min( cellPosY+cellRange, gridSizeY-1 );
+		// spawn all of the cells in active square if they are not spawned already
 		for(int x=cellStartX; x<=cellEndX; ++x )
 		{
 			for(int y=cellStartY; y<=cellEndY; ++y )
@@ -64,6 +78,7 @@ public class CaveSpawner : MonoBehaviour
 				}
 			}
 		}
+		// unspawn all of the cells in the previous square if they are not in the active square
 		for(int x=oldCellStartX; x<=oldCellEndX; ++x )
 		{
 			for(int y=oldCellStartY; y<=oldCellEndY; ++y )
@@ -77,10 +92,14 @@ public class CaveSpawner : MonoBehaviour
 				}
 			}
 		}
+		// record the current active square so it can be deleted next time the player mo
 		oldCellStartX = cellStartX;
 		oldCellStartY = cellStartY;
 		oldCellEndX = cellEndX;
 		oldCellEndY = cellEndY;
+		// record the current position of the player in cell space
+		spawnedPosX = cellPosX;
+		spawnedPosY = cellPosY;
 	}
 	
 	void unspawnCell( int ix, int iy )
@@ -129,4 +148,25 @@ public class CaveSpawner : MonoBehaviour
 	{
 	
 	}
+	
+	void FixedUpdate() 
+	{
+		float xpos = 0.0f;
+		float ypos = 0.0f;
+		if( player != null )
+		{
+			xpos = player.transform.position.x;
+			ypos = player.transform.position.y;
+		}
+		int cellPosX = centreGridPosX + (int)( xpos/cellSize );
+		int cellPosY = centreGridPosY + (int)( ypos/cellSize );
+		if(		( cellPosX != spawnedPosX ) 
+			|| 	( cellPosY != spawnedPosY ) )
+		{
+			Debug.Log("Updating Cave");
+			SpawnGrid( xpos, ypos, range );
+		}
+			
+	}
+
 }

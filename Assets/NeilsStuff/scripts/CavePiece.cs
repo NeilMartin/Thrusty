@@ -33,51 +33,98 @@ public class CavePiece : MonoBehaviour
 	void GenerateFromType( int type )
 	{
 		float size = 5.0f;
-		switch(type)
+		float[] innerRing = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+		float[] outerRing = { 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f };
+		float[] maxRing = { 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f };
+		int numLengths = outerRing.Length;
+		for(int i=0;i<numLengths;++i)
 		{
-		case 0:
-			break;
-
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-		case 15:
-			break;
-			
-		case 16:
-		case 17:
-		case 18:
-		case 19:
-		case 20:
-		case 21:
-		case 22:
-		case 23:
-		case 24:
-		case 25:
-		case 26:
-		case 27:
-		case 28:
-		case 29:
-		case 30:
-		case 31:
+			float rad = (2.0f*Mathf.PI/(float)numLengths)*(float)i;
+			float vx = Mathf.Sin( rad )*2.0f;
+			float vy = Mathf.Cos( rad )*2.0f;
+			float vxs = Mathf.Abs( vx );
+			if( vxs > 1.0f )
 			{
-				float[] innerRing = { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f };
-				float[] outerRing = { 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f };
-				GenerateFromRings( innerRing, outerRing, size );
+				vx /= vxs;
+				vy /= vxs;
 			}
-			break;			
+			float vys = Mathf.Abs( vy );
+			if( vys > 1.0f )
+			{
+				vx /= vys;
+				vy /= vys;
+			}
+			maxRing[i] = Mathf.Sqrt((vx*vx)+(vy*vy));
+			outerRing[i] = maxRing[i];
 		}
+		if(type<16)
+		{
+			innerRing = new float[] { 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f };
+			bool bDownClear = ((type&(1<<0))==0);
+			bool bUpClear = ((type&(1<<2))==0);
+			bool bLeftClear = ((type&(1<<3))==0);
+			bool bRightClear = ((type&(1<<1))==0);
+			if(bUpClear)
+			{
+				innerRing[0] = maxRing[0];
+				innerRing[1] = maxRing[1];
+				innerRing[15] = maxRing[15];
+			}
+			if(bRightClear)
+			{
+				innerRing[3] = maxRing[3];
+				innerRing[4] = maxRing[4];
+				innerRing[5] = maxRing[5];
+			}
+			if(bDownClear)
+			{
+				innerRing[7] = maxRing[7];
+				innerRing[8] = maxRing[8];
+				innerRing[9] = maxRing[9];
+			}
+			if(bLeftClear)
+			{
+				innerRing[11] = maxRing[11];
+				innerRing[12] = maxRing[12];
+				innerRing[13] = maxRing[13];
+			}
+		}
+		else
+		{
+			bool bDownClear = ((type&(1<<0))==0);
+			bool bUpClear = ((type&(1<<2))==0);
+			bool bLeftClear = ((type&(1<<3))==0);
+			bool bRightClear = ((type&(1<<1))==0);
+			float fmin=0.7f;
+			float fmax=0.9f;
+			if(bUpClear)
+			{
+				outerRing[0] = maxRing[0] * Random.Range( fmin, fmax );
+				outerRing[1] = maxRing[1] * Random.Range( fmin, fmax );
+				outerRing[15] = maxRing[15] * Random.Range( fmin, fmax );
+			}
+			if(bRightClear)
+			{
+				outerRing[3] = maxRing[3] * Random.Range( fmin, fmax );
+				outerRing[4] = maxRing[4] * Random.Range( fmin, fmax );
+				outerRing[5] = maxRing[5] * Random.Range( fmin, fmax );
+			}
+			if(bDownClear)
+			{
+				outerRing[7] = maxRing[7] * Random.Range( fmin, fmax );
+				outerRing[8] = maxRing[8] * Random.Range( fmin, fmax );
+				outerRing[9] = maxRing[9] * Random.Range( fmin, fmax );
+			}
+			if(bLeftClear)
+			{
+				outerRing[11] = maxRing[11] * Random.Range( fmin, fmax );
+				outerRing[12] = maxRing[12] * Random.Range( fmin, fmax );
+				outerRing[13] = maxRing[13] * Random.Range( fmin, fmax );
+			}
+			GenerateFromRings( innerRing, outerRing, size );
+		}
+			
+
 	}
 	
 	void GenerateFromRings( float[] innerRing, float[] outerRing, float size )
