@@ -87,8 +87,8 @@ public class CaveSpawner : MonoBehaviour
 			{
 				if(		( x<cellStartX )
 					||	( x>cellEndX )
-					||  ( x<cellStartX )
-					||	( x>cellEndX ) )
+					||  ( y<cellStartY )
+					||	( y>cellEndY ) )
 				{
 					unspawnCell(x,y);
 				}

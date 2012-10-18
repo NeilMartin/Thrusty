@@ -30,11 +30,6 @@ public class ShipController : MonoBehaviour
 		rigidbody.centerOfMass.Set( 0.0f, 0.0f, 0.0f );
 	}
 	
-	// Update is called once per frame
-	void Update () 
-	{
-	}
-	
 	float CalcHeightAboveGround( GameObject obj, float length, float radius )
 	{
 		Vector3 pos = obj.transform.position;
@@ -66,6 +61,8 @@ public class ShipController : MonoBehaviour
 	
 	void FixedUpdate()
 	{
+		//float scalerFix = 60.0f * Time.deltaTime;
+		float scalerFix = 1.0f;
 		mbIsGrounded = CalcIfGrounded();
 		if( mbIsGrounded )
 		{
@@ -80,13 +77,13 @@ public class ShipController : MonoBehaviour
 			float deltaSpin = desiredSpin - currentSpin;
 		
 			mSpinPower = deltaSpin * turnPower;
-			spinnerRigidbody.AddTorque( new Vector3( 0.0f, 0.0f, mSpinPower ) );
+			spinnerRigidbody.AddTorque( new Vector3( 0.0f, 0.0f, mSpinPower * scalerFix ) );
 		}
 		
 		// thrust controls
 		float thrust = Mathf.Clamp(Input.GetAxis("Vertical"), 0.0f, 1.0f);
 		Vector3 dir = transform.up;
-		spinnerRigidbody.AddForce( dir * thrust * forwardAcc );
+		spinnerRigidbody.AddForce( dir * thrust * forwardAcc * scalerFix );
     }
 }
 

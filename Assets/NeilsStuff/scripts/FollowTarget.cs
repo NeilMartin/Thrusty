@@ -8,6 +8,9 @@ public class FollowTarget : MonoBehaviour
 	public float camLag = 0.5f; // 1.0 = no lag. 0.0 = infinite lag
 	
 	private Vector3 mTargetOffset;
+	private float mSpeed;
+	private Vector3 mCamOffset;
+	
 		
 	// Use this for initialization
 	void Start () 
@@ -15,18 +18,25 @@ public class FollowTarget : MonoBehaviour
 		mTargetOffset = transform.position - target.transform.position;
 	}
 	
-	void FixedUpdate () 
+	void FixedUpdate()
 	{
 		Vector3 desiredPos = target.transform.position + mTargetOffset;
-		
 		if( lookAheadScale > 0.0f )
 		{
 			if( null != target.rigidbody )			
 			{
-				desiredPos += target.rigidbody.velocity * lookAheadScale;
+				//mSpeed = target.rigidbody.velocity.magnitude;
+				//Vector3 vOffset = target.rigidbody.velocity;
+				//vOffset.Normalize();
+				desiredPos +=  target.rigidbody.velocity * lookAheadScale;
 			}
 		}
-		
-		transform.position += (desiredPos - transform.position)*camLag;
+		desiredPos = transform.position + ((desiredPos - transform.position)*camLag);
+		mCamOffset = desiredPos - target.transform.position;
+	}
+	
+	void LateUpdate () 
+	{
+		transform.position = target.transform.position + mCamOffset;
 	}
 }
