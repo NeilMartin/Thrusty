@@ -4,6 +4,8 @@ using System.Collections;
 public class FollowTarget : MonoBehaviour 
 {
 	public GameObject target;
+	public float lookAheadScale = 0.2f;
+	public float camLag = 0.5f; // 1.0 = no lag. 0.0 = infinite lag
 	
 	private Vector3 mTargetOffset;
 		
@@ -13,9 +15,18 @@ public class FollowTarget : MonoBehaviour
 		mTargetOffset = transform.position - target.transform.position;
 	}
 	
-	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
 	{
-		transform.position = target.transform.position + mTargetOffset;
+		Vector3 desiredPos = target.transform.position + mTargetOffset;
+		
+		if( lookAheadScale > 0.0f )
+		{
+			if( null != target.rigidbody )			
+			{
+				desiredPos += target.rigidbody.velocity * lookAheadScale;
+			}
+		}
+		
+		transform.position += (desiredPos - transform.position)*camLag;
 	}
 }
