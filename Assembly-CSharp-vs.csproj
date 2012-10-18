@@ -44,6 +44,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\NeilsStuff\scripts\CavePiece.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\CaveSpawner.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\FollowTarget.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ShipController.cs" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
