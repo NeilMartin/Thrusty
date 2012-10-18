@@ -5,8 +5,8 @@ public class CaveSpawner : MonoBehaviour
 {
 	public GameObject cavePiece;
 	public GameObject player;
+	public float drawRange = 30.0f;
 	
-	private static float range = 30.0f;
 	private static int gridSizeX = 30;
 	private static int gridSizeY = 30;
 	private static int centreGridPosX = gridSizeX/2;
@@ -26,7 +26,7 @@ public class CaveSpawner : MonoBehaviour
 	void Start () 
 	{
 		GenerateCaveGrid();
-		SpawnGrid( 0.0f, 0.0f, range );
+		SpawnGrid( 0.0f, 0.0f, drawRange );
 	}
 	
 	private void GenerateCaveGrid()
@@ -164,7 +164,7 @@ public class CaveSpawner : MonoBehaviour
 			|| 	( cellPosY != spawnedPosY ) )
 		{
 			Debug.Log("Updating Cave");
-			SpawnGrid( xpos, ypos, range );
+			SpawnGrid( xpos, ypos, drawRange );
 		}
 			
 	}
