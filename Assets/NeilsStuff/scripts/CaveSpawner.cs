@@ -6,6 +6,7 @@ public class CaveSpawner : MonoBehaviour
 	public GameObject cavePiece;
 	public GameObject player;
 	public float drawRange = 30.0f;
+	public int seed = 0;
 	
 	private static int gridSizeX = 30;
 	private static int gridSizeY = 30;
@@ -31,6 +32,7 @@ public class CaveSpawner : MonoBehaviour
 	
 	private void GenerateCaveGrid()
 	{
+		Random.seed = seed;
 		float density = 30.0f;
 		caveGrid = new int[gridSizeX,gridSizeY];
 		for(int x=0;x<gridSizeX;++x)
@@ -117,7 +119,11 @@ public class CaveSpawner : MonoBehaviour
 				|  (GetCell( ix+1, iy+0 )>0?1:0)<<1
 				|  (GetCell( ix+0, iy+1 )>0?1:0)<<2
 				|  (GetCell( ix-1, iy+0 )>0?1:0)<<3
-				|  (GetCell( ix+0, iy+0 )>0?1:0)<<4;
+				|  (GetCell( ix+1, iy-1 )>0?1:0)<<4
+				|  (GetCell( ix+1, iy+1 )>0?1:0)<<5
+				|  (GetCell( ix-1, iy+1 )>0?1:0)<<6
+				|  (GetCell( ix-1, iy-1 )>0?1:0)<<7
+				|  (GetCell( ix+0, iy+0 )>0?1:0)<<8;
 		GameObject go = null;
 		if( type > 0 )
 		{
@@ -125,7 +131,8 @@ public class CaveSpawner : MonoBehaviour
 			Quaternion rot = new Quaternion();
 			go = (GameObject)Instantiate( cavePiece, pos, rot );
 			CavePiece piece = go.GetComponent<CavePiece>();
-			piece.SetType(type);
+			int seed = ix*256+iy;
+			piece.SetType(type, seed);
 		}
 		return go;
 	}
@@ -163,10 +170,8 @@ public class CaveSpawner : MonoBehaviour
 		if(		( cellPosX != spawnedPosX ) 
 			|| 	( cellPosY != spawnedPosY ) )
 		{
-			Debug.Log("Updating Cave");
 			SpawnGrid( xpos, ypos, drawRange );
 		}
-			
 	}
 
 }

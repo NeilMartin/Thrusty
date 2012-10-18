@@ -10,10 +10,12 @@ public class CavePiece : MonoBehaviour
 	private Vector2[] 	newUV;
 	private int[]		newTriangles;
 	private int         mType;
+	private int         mSeed;
 	
-	public void SetType( int type )
+	public void SetType( int type, int seed )
 	{
 		mType = type;
+		mSeed = seed;
 	}
 	
 	// Use this for initialization
@@ -21,7 +23,7 @@ public class CavePiece : MonoBehaviour
 	{
 		gameObject.AddComponent("MeshFilter");
 	    gameObject.AddComponent("MeshRenderer");
-		GenerateFromType( mType );
+		GenerateFromType( mType, mSeed );
 		if( physicMaterial != null )
 		{
 			gameObject.AddComponent("MeshCollider");
@@ -30,8 +32,10 @@ public class CavePiece : MonoBehaviour
 		}
 	}
 	
-	void GenerateFromType( int type )
+	void GenerateFromType( int type, int seed )
 	{
+		float connectorScale = Mathf.Sqrt(2.0f);
+		float diagonalVariance = 1.5f;
 		float size = 5.0f;
 		float[] innerRing = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		float[] outerRing = { 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f };
@@ -57,7 +61,7 @@ public class CavePiece : MonoBehaviour
 			maxRing[i] = Mathf.Sqrt((vx*vx)+(vy*vy));
 			outerRing[i] = maxRing[i];
 		}
-		if(type<16)
+		if(type<256)
 		{
 			innerRing = new float[] { 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f };
 			bool bDownClear = ((type&(1<<0))==0);
@@ -91,10 +95,15 @@ public class CavePiece : MonoBehaviour
 		}
 		else
 		{
+			Random.seed = seed;
 			bool bDownClear = ((type&(1<<0))==0);
 			bool bUpClear = ((type&(1<<2))==0);
 			bool bLeftClear = ((type&(1<<3))==0);
 			bool bRightClear = ((type&(1<<1))==0);
+			bool bDownRightClear = ((type&(1<<4))==0); // good
+			bool bDownLeftClear = ((type&(1<<7))==0);
+			bool bUpLeftClear = ((type&(1<<6))==0);
+			bool bUpRightClear = ((type&(1<<5))==0);
 			float fmin=0.7f;
 			float fmax=0.9f;
 			if(bUpClear)
@@ -121,6 +130,66 @@ public class CavePiece : MonoBehaviour
 				outerRing[12] = maxRing[12] * Random.Range( fmin, fmax );
 				outerRing[13] = maxRing[13] * Random.Range( fmin, fmax );
 			}
+			if((bUpClear)&&(bRightClear))
+			{
+				if(bUpRightClear)
+				{
+					outerRing[2] = maxRing[2] * Random.Range( fmin, fmax ) * 0.7f;
+				}
+				else
+				{
+					outerRing[0] = maxRing[0] * Random.Range( fmin, fmax ) * diagonalVariance;
+					outerRing[1] = maxRing[1] * connectorScale;
+					outerRing[2] = maxRing[2];
+					outerRing[3] = maxRing[3] * connectorScale;
+					outerRing[4] = maxRing[4] * Random.Range( fmin, fmax ) * diagonalVariance;
+				}
+			}
+			if((bDownClear)&&(bRightClear))
+			{
+				if(bDownRightClear)
+				{
+					outerRing[6] = maxRing[6] * Random.Range( fmin, fmax ) * 0.7f;
+				}
+				else
+				{
+					outerRing[4] = maxRing[4] * Random.Range( fmin, fmax ) * diagonalVariance;
+					outerRing[5] = maxRing[5] * connectorScale;
+					outerRing[6] = maxRing[6];
+					outerRing[7] = maxRing[7] * connectorScale;
+					outerRing[8] = maxRing[8] * Random.Range( fmin, fmax ) * diagonalVariance;
+				}
+			}
+			if((bDownClear)&&(bLeftClear))
+			{
+				if(bDownLeftClear)
+				{
+					outerRing[10] = maxRing[10] * Random.Range( fmin, fmax ) * 0.7f;
+				}
+				else
+				{
+					outerRing[8] = maxRing[8] * Random.Range( fmin, fmax ) * diagonalVariance;
+					outerRing[9] = maxRing[9] * connectorScale;
+					outerRing[10] = maxRing[10];
+					outerRing[11] = maxRing[11] * connectorScale;
+					outerRing[12] = maxRing[12] * Random.Range( fmin, fmax ) * diagonalVariance;
+				}
+			}
+			if((bUpClear)&&(bLeftClear))
+			{
+				if(bUpLeftClear)
+				{
+					outerRing[14] = maxRing[14] * Random.Range( fmin, fmax ) * 0.7f;
+				}
+				else
+				{
+					outerRing[12] = maxRing[12] * Random.Range( fmin, fmax ) * diagonalVariance;
+					outerRing[13] = maxRing[13] * connectorScale;
+					outerRing[14] = maxRing[14];
+					outerRing[15] = maxRing[15] * connectorScale;
+					outerRing[0] = maxRing[0] * Random.Range( fmin, fmax ) * diagonalVariance;
+				}
+			}
 			GenerateFromRings( innerRing, outerRing, size );
 		}
 			
@@ -130,7 +199,7 @@ public class CavePiece : MonoBehaviour
 	void GenerateFromRings( float[] innerRing, float[] outerRing, float size )
 	{
 		int numLengths = innerRing.Length;
-		int numVertsPerLength = 4;
+		int numVertsPerLength = 6;
 		newVertices = new Vector3[numLengths*numVertsPerLength];
 		newNormals = new Vector3[numLengths*numVertsPerLength];
 		newUV = new Vector2[numLengths*numVertsPerLength];
@@ -145,24 +214,32 @@ public class CavePiece : MonoBehaviour
 			int index = i*numVertsPerLength;
 			newVertices[index+0] = vec*innerRing[i]*size;
 			newVertices[index+1] = vec*innerRing[i]*size;
-			newVertices[index+2] = vec*outerRing[i]*size;
+			newVertices[index+2] = vec*innerRing[i]*size;
 			newVertices[index+3] = vec*outerRing[i]*size;
+			newVertices[index+4] = vec*outerRing[i]*size;
+			newVertices[index+5] = vec*outerRing[i]*size;
 			newVertices[index+1].z -= size*zscale;
 			newVertices[index+2].z -= size*zscale;
+			newVertices[index+3].z -= size*zscale;
+			newVertices[index+4].z -= size*zscale;
 			newVertices[index+0].z += size*zscale;
-			newVertices[index+3].z += size*zscale;
+			newVertices[index+5].z += size*zscale;
 			newUV[index+0] = new Vector2( 0.0f, 0.0f );
 			newUV[index+1] = new Vector2( 0.0f, 1.0f );
-			newUV[index+2] = new Vector2( 1.0f, 1.0f );
-			newUV[index+3] = new Vector2( 1.0f, 0.0f );
+			newUV[index+2] = new Vector2( 0.0f, 1.0f );
+			newUV[index+3] = new Vector2( 1.0f, 1.0f );
+			newUV[index+4] = new Vector2( 1.0f, 1.0f );
+			newUV[index+5] = new Vector2( 1.0f, 0.0f );
 			newNormals[index+0] = -vec;
 			newNormals[index+1] = -vec;
-			newNormals[index+2] = vec;
-			newNormals[index+3] = vec;
-			newNormals[index+1].z = -1.0f;
-			newNormals[index+2].z = -1.0f;
-			newNormals[index+1].Normalize();
-			newNormals[index+2].Normalize();
+			newNormals[index+2] = new Vector3(0.0f,0.0f,-1.0f);
+			newNormals[index+3] = newNormals[index+2];
+			newNormals[index+4] = vec;
+			newNormals[index+5] = vec;
+			//newNormals[index+1].z = -1.0f;
+			//newNormals[index+2].z = -1.0f;
+			//newNormals[index+1].Normalize();
+			//newNormals[index+2].Normalize();
 		}
 		int numVertsPerTri = 3;
 		int numTrisPerLength = 6;
@@ -173,17 +250,21 @@ public class CavePiece : MonoBehaviour
 			int index1 = index0+1;
 			int index2 = index0+2;
 			int index3 = index0+3;
-			int index4 = ((i+1)%numLengths)*numVertsPerLength;
-			int index5 = index4+1;
-			int index6 = index4+2;
-			int index7 = index4+3;
+			int index4 = index0+4;
+			int index5 = index0+5;
+			int index6 = ((i+1)%numLengths)*numVertsPerLength;
+			int index7 = index6+1;
+			int index8 = index6+2;
+			int index9 = index6+3;
+			int index10= index6+4;
+			int index11= index6+5;
 			int tindex = i*numTrisPerLength*numVertsPerTri;
-			newTriangles[tindex+0] = index0; newTriangles[tindex+1] = index5; newTriangles[tindex+2] = index4;
-			newTriangles[tindex+3] = index0; newTriangles[tindex+4] = index1; newTriangles[tindex+5] = index5;
-			newTriangles[tindex+6] = index1; newTriangles[tindex+7] = index6; newTriangles[tindex+8] = index5;
-			newTriangles[tindex+9] = index1; newTriangles[tindex+10]= index2; newTriangles[tindex+11]= index6;
-			newTriangles[tindex+12] = index2; newTriangles[tindex+13]= index7; newTriangles[tindex+14]= index6;
-			newTriangles[tindex+15] = index2; newTriangles[tindex+16]= index3; newTriangles[tindex+17]= index7;
+			newTriangles[tindex+0] = index0; newTriangles[tindex+1] = index5; newTriangles[tindex+2] = index7;
+			newTriangles[tindex+3] = index0; newTriangles[tindex+4] = index7; newTriangles[tindex+5] = index6;
+			newTriangles[tindex+6] = index2; newTriangles[tindex+7] = index3; newTriangles[tindex+8] = index9;
+			newTriangles[tindex+9] = index2; newTriangles[tindex+10]= index9; newTriangles[tindex+11]= index8;
+			newTriangles[tindex+12] = index4; newTriangles[tindex+13]= index5; newTriangles[tindex+14]= index11;
+			newTriangles[tindex+15] = index4; newTriangles[tindex+16]= index11; newTriangles[tindex+17]= index10;
 		}
 		Mesh mesh = new Mesh();
     	GetComponent<MeshFilter>().mesh = mesh;
@@ -195,66 +276,4 @@ public class CavePiece : MonoBehaviour
 		
 	}
 	
-	void GenerateFromHeights( float[] heights )
-	{
-		int numHeights = heights.Length;
-		float min = heights[0];
-		float max = heights[0];
-		for(int i=1;i<numHeights;++i)
-		{
-			min = Mathf.Min( min, heights[i] );
-			max = Mathf.Max( max, heights[i] );
-		}
-		int numVertsPerTri = 3;
-		int numVertsPerHeight = 3;
-		newVertices = new Vector3[numHeights*numVertsPerHeight];
-		newUV = new Vector2[numHeights*numVertsPerHeight];
-		float xstep = 0.1f;
-		float ybase = min-30.0f;
-		float zmin = -0.2f;
-		float zmax = 0.2f;
-		for(int i=0;i<numHeights;++i)
-		{
-			float xpos = i*xstep;
-			int index = i*numVertsPerHeight;
-			newVertices[index+0] = new Vector3( xpos, ybase, zmin );
-			newVertices[index+1] = new Vector3( xpos, heights[i], zmin );
-			newVertices[index+2] = new Vector3( xpos, heights[i], zmax );
-			newUV[index+0] = new Vector2( 0.0f, 0.0f );
-			newUV[index+1] = new Vector2( 0.0f, 1.0f );
-			newUV[index+2] = new Vector2( 1.0f, 1.0f );
-		}
-		int numTrisPerHeight = 4;
-		newTriangles = new int[numTrisPerHeight*(numHeights-1)*numVertsPerTri];
-		for(int i=1;i<numHeights;++i)
-		{
-			int index0 = (i-1)*numVertsPerHeight;
-			int index1 = index0+1;
-			int index2 = index0+2;
-			int index3 = i*numVertsPerHeight;
-			int index4 = index3+1;
-			int index5 = index3+2;
-			int tindex = (i-1)*numTrisPerHeight*numVertsPerTri;
-			newTriangles[tindex+0] = index0; newTriangles[tindex+1] = index1; newTriangles[tindex+2] = index4;
-			newTriangles[tindex+3] = index0; newTriangles[tindex+4] = index4; newTriangles[tindex+5] = index3;
-			newTriangles[tindex+6] = index1; newTriangles[tindex+7] = index2; newTriangles[tindex+8] = index5;
-			newTriangles[tindex+9] = index1; newTriangles[tindex+10]= index5; newTriangles[tindex+11]= index4;
-		}
-		Mesh mesh = new Mesh();
-    	GetComponent<MeshFilter>().mesh = mesh;
-    	mesh.vertices = newVertices;
-    	mesh.uv = newUV;
-    	mesh.triangles = newTriangles;
-		GetComponent<MeshRenderer>().material = visualMaterial;
-	}
-	
-	float[] GenerateHeights()
-	{
-		float[] heights = new float[100];
-		for(int i=0;i<100;++i)
-		{
-			heights[i] = (i*-0.02f) + Random.Range(-0.03f,0.0f);
-		}
-		return heights;
-	}
 }
