@@ -11,11 +11,22 @@ public class CavePiece : MonoBehaviour
 	private int[]		newTriangles;
 	private int         mType;
 	private int         mSeed;
+	private Material 	mVisualMaterial;
+	private float       mThickness;
 	
-	public void SetType( int type, int seed )
+	public void SetType( int type, int seed, Material mat, float thickness )
 	{
 		mType = type;
 		mSeed = seed;
+		if( mat == null )
+		{
+			mVisualMaterial = visualMaterial;
+		}
+		else
+		{
+			mVisualMaterial = mat;
+		}
+		mThickness = thickness;
 	}
 	
 	// Use this for initialization
@@ -203,7 +214,6 @@ public class CavePiece : MonoBehaviour
 		newVertices = new Vector3[numLengths*numVertsPerLength];
 		newNormals = new Vector3[numLengths*numVertsPerLength];
 		newUV = new Vector2[numLengths*numVertsPerLength];
-		float zscale = 0.2f;
 		Vector3 vec = new Vector3();
 		for(int i=0;i<numLengths;++i)
 		{
@@ -218,12 +228,12 @@ public class CavePiece : MonoBehaviour
 			newVertices[index+3] = vec*outerRing[i]*size;
 			newVertices[index+4] = vec*outerRing[i]*size;
 			newVertices[index+5] = vec*outerRing[i]*size;
-			newVertices[index+1].z -= size*zscale;
-			newVertices[index+2].z -= size*zscale;
-			newVertices[index+3].z -= size*zscale;
-			newVertices[index+4].z -= size*zscale;
-			newVertices[index+0].z += size*zscale;
-			newVertices[index+5].z += size*zscale;
+			newVertices[index+1].z -= mThickness;
+			newVertices[index+2].z -= mThickness;
+			newVertices[index+3].z -= mThickness;
+			newVertices[index+4].z -= mThickness;
+			newVertices[index+0].z += mThickness;
+			newVertices[index+5].z += mThickness;
 			newUV[index+0] = new Vector2( 0.0f, 0.0f );
 			newUV[index+1] = new Vector2( 0.0f, 1.0f );
 			newUV[index+2] = new Vector2( 0.0f, 1.0f );
@@ -272,7 +282,7 @@ public class CavePiece : MonoBehaviour
     	mesh.uv = newUV;
     	mesh.triangles = newTriangles;
 		mesh.normals = newNormals;
-		GetComponent<MeshRenderer>().material = visualMaterial;
+		GetComponent<MeshRenderer>().material = mVisualMaterial;
 		
 	}
 	
