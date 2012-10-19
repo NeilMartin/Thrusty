@@ -18,6 +18,10 @@ public class TurretAI : MonoBehaviour
 	
 	void Update () 
 	{
+		if( null == target )
+		{
+			target =  GameObject.FindWithTag("Player");
+		}
 		if( mTimeUntilReady > 0.0f )
 		{
 			mTimeUntilReady -= Time.deltaTime;

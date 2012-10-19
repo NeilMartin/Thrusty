@@ -47,6 +47,7 @@
      <Compile Include="Assets\NeilsStuff\scripts\CavePiece.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\CaveSpawner.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\DestroyAfterTime.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\DestroyWhenShot.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\FollowTarget.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ProjectileLauncher.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ShipController.cs" />

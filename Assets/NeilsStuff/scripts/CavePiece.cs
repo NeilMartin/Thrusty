@@ -5,14 +5,17 @@ public class CavePiece : MonoBehaviour
 {
 	public Material 		visualMaterial;
 	public PhysicMaterial	physicMaterial;
-	private Vector3[] 	newVertices;
+	/*private Vector3[] 	newVertices;
 	private Vector3[] 	newNormals;
 	private Vector2[] 	newUV;
-	private int[]		newTriangles;
+	private int[]		newTriangles;*/
 	private int         mType;
 	private int         mSeed;
 	private Material 	mVisualMaterial;
 	private float       mThickness;
+	private GameObject[]	mSpawn;
+	
+	private const int numVertsPerLength = 6;
 	
 	public void SetType( int type, int seed, Material mat, float thickness )
 	{
@@ -27,6 +30,7 @@ public class CavePiece : MonoBehaviour
 			mVisualMaterial = mat;
 		}
 		mThickness = thickness;
+		mSpawn = new GameObject[8];
 	}
 	
 	// Use this for initialization
@@ -210,7 +214,10 @@ public class CavePiece : MonoBehaviour
 	void GenerateFromRings( float[] innerRing, float[] outerRing, float size )
 	{
 		int numLengths = innerRing.Length;
-		int numVertsPerLength = 6;
+		Vector3[] 	newVertices;
+	 	Vector3[] 	newNormals;
+	 	Vector2[] 	newUV;
+	 	int[]		newTriangles;
 		newVertices = new Vector3[numLengths*numVertsPerLength];
 		newNormals = new Vector3[numLengths*numVertsPerLength];
 		newUV = new Vector2[numLengths*numVertsPerLength];
@@ -284,6 +291,115 @@ public class CavePiece : MonoBehaviour
 		mesh.normals = newNormals;
 		GetComponent<MeshRenderer>().material = mVisualMaterial;
 		
+		for(int i=0;i<8;++i)
+		{
+			Spawn(i, newVertices);
+		}
 	}
 	
+	private void Spawn( int index, Vector3[] newVertices )
+	{
+		if( mSpawn[index] != null )
+		{
+			Vector3 pos;
+			Quaternion rot;
+			GetSpawnPos( index, out pos, out rot, newVertices );
+			Instantiate( mSpawn[index], pos, rot );
+		}
+	}
+	
+	public bool HasSpaceCentre()
+	{
+		return (mType & (1<<8))!=0;
+	}
+
+	public bool HasSpaceTop()
+	{
+		return (mType & (1<<2))!=0;
+	}
+
+	public bool CanSpawnTop()
+	{
+		return ((HasSpaceCentre()==true) && (HasSpaceTop()==false))
+			|| ((HasSpaceCentre()==false) && (HasSpaceTop()==true));
+	}
+
+	public bool HasSpaceRight()
+	{
+		return (mType & (1<<1))!=0;
+	}
+
+	public bool CanSpawnRight()
+	{
+		return ((HasSpaceCentre()==true) && (HasSpaceRight()==false))
+			|| ((HasSpaceCentre()==false) && (HasSpaceRight()==true));
+	}
+
+	public bool HasSpaceInDir( int i )
+	{
+		bool bSpace = false;
+		switch(i)
+		{
+		case 0:	bSpace = (mType & (1<<2))!=0;	break;
+		case 1:	bSpace = (mType & (1<<5))!=0;	break;
+		case 2:	bSpace = (mType & (1<<1))!=0;	break;
+		case 3:	bSpace = (mType & (1<<4))!=0;	break;
+		case 4:	bSpace = (mType & (1<<0))!=0;	break;
+		case 5:	bSpace = (mType & (1<<7))!=0;	break;
+		case 6:	bSpace = (mType & (1<<3))!=0;	break;
+		case 7:	bSpace = (mType & (1<<6))!=0;	break;
+		}
+		return bSpace;
+	}
+
+	public bool CanSpawnInDir( int i )
+	{
+		bool bHasSpace = ((HasSpaceCentre()==true) && (HasSpaceInDir(i)==false))
+					  || ((HasSpaceCentre()==false) && (HasSpaceInDir(i)==true));
+		if(bHasSpace && ((i&1)!=0))
+		{
+			bHasSpace = ((HasSpaceCentre()==true) && (HasSpaceInDir((i+1)%8)==false))
+					 || ((HasSpaceCentre()==false) && (HasSpaceInDir((i+1)%8)==true));
+		}
+		return bHasSpace;
+	}
+
+	private void GetTopSpawnPos( out Vector3 pos, out Quaternion rot, Vector3[] newVertices )
+	{
+		GetSpawnPos( 0, out pos, out rot, newVertices );
+	}
+
+	private void GetSpawnPos( int index, out Vector3 pos, out Quaternion rot, Vector3[] newVertices )
+	{
+		index*=2;
+		Vector3 pos1 = (newVertices[((index+0)*numVertsPerLength)+4]+newVertices[((index+0)*numVertsPerLength)+5])*0.5f;
+		Vector3 pos2 = (newVertices[(((index+1)%16)*numVertsPerLength)+4]+newVertices[(((index+1)%16)*numVertsPerLength)+5])*0.5f;
+		Vector3 dir = pos1-pos2;
+		float temp = dir.x;
+		dir.x = -dir.y;
+		dir.y = temp;
+		Vector3 up = new Vector3(0.0f, 0.0f, 1.0f);
+		rot = Quaternion.LookRotation(dir,up);
+		pos = ((pos1+pos2)*0.5f)+transform.position;
+	}
+
+	public void SetSpawn( int index, GameObject obj )
+	{
+		mSpawn[index] = obj;
+	}
+	
+	public void SetSpawners( GameObject obj, float chanceOfObj, ref bool[] bOccupied )
+	{
+		if( obj != null )
+		{
+			for(int i=0;i<8;++i)
+			{
+				if( (bOccupied[i]==false) && CanSpawnInDir(i) && (Random.Range(0,100)<=chanceOfObj) )
+				{
+					SetSpawn(i,obj);
+					bOccupied[i] = true;
+				}
+			}
+		}
+	}
 }

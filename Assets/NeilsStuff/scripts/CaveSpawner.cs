@@ -4,6 +4,8 @@ using System.Collections;
 public class CaveSpawner : MonoBehaviour 
 {
 	public GameObject cavePiece;
+	public GameObject turretObject;
+	public GameObject crystalObject;
 	public GameObject player;
 	public Material material;
 	public float drawRange = 30.0f;
@@ -20,6 +22,7 @@ public class CaveSpawner : MonoBehaviour
 	private static float cellSize = 10.0f;
 	private int[,] caveGrid;
 	private GameObject[,] cellObject;
+	private bool[,] mFirstTime;
 	private int oldCellStartX = 10;
 	private int oldCellStartY = 10;
 	private int oldCellEndX = -1;
@@ -54,11 +57,13 @@ public class CaveSpawner : MonoBehaviour
 			caveGrid[gridSizeX-1,x] = 1;
 		}
 		cellObject = new GameObject[gridSizeX,gridSizeY]; // how do I create an array of nulls?
+		mFirstTime = new bool[gridSizeX,gridSizeY]; 
 		for(int x=0;x<gridSizeX;++x)
 		{
 			for(int y=1;y<gridSizeY;++y)
 			{
 				cellObject[x,y] = null;
+				mFirstTime[x,y] = true;
 			}
 		}
 		caveGrid[centreGridPosX,centreGridPosY] = 0;
@@ -119,15 +124,24 @@ public class CaveSpawner : MonoBehaviour
 	
 	GameObject spawnCell( int ix, int iy, Vector3 origin )
 	{
-		int type = (GetCell( ix+0, iy-1 )>0?1:0)<<0
-				|  (GetCell( ix+1, iy+0 )>0?1:0)<<1
-				|  (GetCell( ix+0, iy+1 )>0?1:0)<<2
-				|  (GetCell( ix-1, iy+0 )>0?1:0)<<3
-				|  (GetCell( ix+1, iy-1 )>0?1:0)<<4
-				|  (GetCell( ix+1, iy+1 )>0?1:0)<<5
-				|  (GetCell( ix-1, iy+1 )>0?1:0)<<6
-				|  (GetCell( ix-1, iy-1 )>0?1:0)<<7
-				|  (GetCell( ix+0, iy+0 )>0?1:0)<<8;
+		bool bBottom		= GetCell( ix+0, iy-1 )>0;
+		bool bRight 		= GetCell( ix+1, iy+0 )>0;
+		bool bTop 			= GetCell( ix+0, iy+1 )>0;
+		bool bLeft 			= GetCell( ix-1, iy+0 )>0;
+		bool bBottomRight  	= GetCell( ix+1, iy-1 )>0;
+		bool bTopRight		= GetCell( ix+1, iy+1 )>0;
+		bool bTopLeft		= GetCell( ix-1, iy+1 )>0;
+		bool bBottomLeft	= GetCell( ix-1, iy-1 )>0;
+		bool bCentre		= GetCell( ix+0, iy+0 )>0;
+		int type = (bBottom		?(1<<0):0)
+				|  (bRight		?(1<<1):0)
+				|  (bTop		?(1<<2):0)
+				|  (bLeft		?(1<<3):0)
+				|  (bBottomRight?(1<<4):0)
+				|  (bTopRight	?(1<<5):0)
+				|  (bTopLeft	?(1<<6):0)
+				|  (bBottomLeft	?(1<<7):0)
+				|  (bCentre		?(1<<8):0);
 		GameObject go = null;
 		if( type > 0 )
 		{
@@ -137,6 +151,14 @@ public class CaveSpawner : MonoBehaviour
 			CavePiece piece = go.GetComponent<CavePiece>();
 			int seed = ix*256+iy;
 			piece.SetType(type, seed, material, thickness);
+			// if this is the first time we've spawned this cell, then let it know it must spawn turrets/crystals/whatever
+			if( mFirstTime[ix,iy] )
+			{
+				mFirstTime[ix,iy] = false;
+				bool[] bOccupied = new bool[8] {false, false, false, false, false, false, false, false };
+				piece.SetSpawners( turretObject, chanceOfTurret, ref bOccupied );
+				piece.SetSpawners( crystalObject, chanceOfCrystal, ref bOccupied );
+			}
 		}
 		return go;
 	}
