@@ -51,6 +51,7 @@
      <Compile Include="Assets\NeilsStuff\scripts\ProjectileLauncher.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ShipController.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\Shoot.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\TurretAI.cs" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
      <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />

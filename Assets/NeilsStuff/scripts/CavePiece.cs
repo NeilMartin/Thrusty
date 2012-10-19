@@ -259,7 +259,7 @@ public class CavePiece : MonoBehaviour
 			int index10= index6+4;
 			int index11= index6+5;
 			int tindex = i*numTrisPerLength*numVertsPerTri;
-			newTriangles[tindex+0] = index0; newTriangles[tindex+1] = index5; newTriangles[tindex+2] = index7;
+			newTriangles[tindex+0] = index0; newTriangles[tindex+1] = index1; newTriangles[tindex+2] = index7;
 			newTriangles[tindex+3] = index0; newTriangles[tindex+4] = index7; newTriangles[tindex+5] = index6;
 			newTriangles[tindex+6] = index2; newTriangles[tindex+7] = index3; newTriangles[tindex+8] = index9;
 			newTriangles[tindex+9] = index2; newTriangles[tindex+10]= index9; newTriangles[tindex+11]= index8;
