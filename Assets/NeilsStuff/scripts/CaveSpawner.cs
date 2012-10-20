@@ -16,6 +16,7 @@ public class CaveSpawner : MonoBehaviour
 	public float chanceOfTurret = 0.0f;
 	public int gridSizeX = 30;
 	public int gridSizeY = 30;
+	public bool spawnOutOfReach = true;
 	
 	private int centreGridPosX;
 	private int centreGridPosY;
@@ -54,9 +55,12 @@ public class CaveSpawner : MonoBehaviour
 		for(int x=0;x<gridSizeX;++x)
 		{
 			caveGrid[x,0] = 1;
-			caveGrid[0,x] = 1;
 			caveGrid[x,gridSizeY-1] = 1;
-			caveGrid[gridSizeX-1,x] = 1;
+		}
+		for(int y=0;y<gridSizeY;++y)
+		{
+			caveGrid[0,y] = 1;
+			caveGrid[gridSizeX-1,y] = 1;
 		}
 		cellObject = new GameObject[gridSizeX,gridSizeY]; // how do I create an array of nulls?
 		mFirstTime = new bool[gridSizeX,gridSizeY]; 
@@ -69,6 +73,68 @@ public class CaveSpawner : MonoBehaviour
 			}
 		}
 		caveGrid[centreGridPosX,centreGridPosY] = 0;
+		if(false == spawnOutOfReach)
+		{
+			Paint(centreGridPosX,centreGridPosY,2,1);
+		}
+	}
+
+	struct PaintPoint
+	{
+		public PaintPoint( int x, int y )
+		{
+			mX = x;
+			mY = y;
+		}
+		
+		public int GetX()
+		{
+			return mX;
+		}
+
+		public int GetY()
+		{
+			return mY;
+		}
+
+		int mX;
+		int mY;
+	};
+
+	private void Paint( int x, int y, int paintValue, int wallValue )
+	{
+		ArrayList paintList = new ArrayList();
+		if( caveGrid[x,y] != wallValue )
+		{
+			paintList.Add( new PaintPoint(x,y) );
+		}
+		
+		while( paintList.Count > 0 )
+		{
+			PaintPoint pp = (PaintPoint)paintList[0];
+			caveGrid[pp.GetX(),pp.GetY()] = paintValue;
+			paintList.RemoveAt(0);
+			if(    ( caveGrid[pp.GetX()-1,pp.GetY()+0] != wallValue )
+				&& ( caveGrid[pp.GetX()-1,pp.GetY()+0] != paintValue ) )
+			{
+				paintList.Add( new PaintPoint( pp.GetX()-1,pp.GetY()+0 ) );
+			}
+			if(    ( caveGrid[pp.GetX()+1,pp.GetY()+0] != wallValue )
+				&& ( caveGrid[pp.GetX()+1,pp.GetY()+0] != paintValue ) )
+			{
+				paintList.Add( new PaintPoint( pp.GetX()+1,pp.GetY()+0 ) );
+			}
+			if(    ( caveGrid[pp.GetX()+0,pp.GetY()+1] != wallValue )
+				&& ( caveGrid[pp.GetX()+0,pp.GetY()+1] != paintValue ) )
+			{
+				paintList.Add( new PaintPoint( pp.GetX()+0,pp.GetY()+1 ) );
+			}
+			if(    ( caveGrid[pp.GetX()+0,pp.GetY()-1] != wallValue )
+				&& ( caveGrid[pp.GetX()+0,pp.GetY()-1] != paintValue ) )
+			{
+				paintList.Add( new PaintPoint( pp.GetX()+0,pp.GetY()-1 ) );
+			}
+		}
 	}
 	
 	private void SpawnGrid( float xpos, float ypos, float range, Vector3 origin )
@@ -126,15 +192,33 @@ public class CaveSpawner : MonoBehaviour
 	
 	GameObject spawnCell( int ix, int iy, Vector3 origin )
 	{
-		bool bBottom		= GetCell( ix+0, iy-1 )>0;
-		bool bRight 		= GetCell( ix+1, iy+0 )>0;
-		bool bTop 			= GetCell( ix+0, iy+1 )>0;
-		bool bLeft 			= GetCell( ix-1, iy+0 )>0;
-		bool bBottomRight  	= GetCell( ix+1, iy-1 )>0;
-		bool bTopRight		= GetCell( ix+1, iy+1 )>0;
-		bool bTopLeft		= GetCell( ix-1, iy+1 )>0;
-		bool bBottomLeft	= GetCell( ix-1, iy-1 )>0;
-		bool bCentre		= GetCell( ix+0, iy+0 )>0;
+		int iBottom			= GetCell( ix+0, iy-1 );
+		int iRight 			= GetCell( ix+1, iy+0 );
+		int iTop 			= GetCell( ix+0, iy+1 );
+		int iLeft 			= GetCell( ix-1, iy+0 );
+		int iBottomRight  	= GetCell( ix+1, iy-1 );
+		int iTopRight		= GetCell( ix+1, iy+1 );
+		int iTopLeft		= GetCell( ix-1, iy+1 );
+		int iBottomLeft		= GetCell( ix-1, iy-1 );
+		int iCentre			= GetCell( ix+0, iy+0 );
+		bool bReachable = (	(iBottom!=0)
+						&&	(iRight!=0)
+						&&	(iTop!=0)
+						&&	(iLeft!=0)
+						&&	(iBottomRight!=0)
+						&&	(iTopRight!=0)
+						&&	(iTopLeft!=0)
+						&&	(iBottomLeft!=0)
+						&&	(iCentre!=0) );
+		bool bBottom		= iBottom==1;
+		bool bRight 		= iRight==1;
+		bool bTop 			= iTop==1;
+		bool bLeft 			= iLeft==1;
+		bool bBottomRight  	= iBottomRight==1;
+		bool bTopRight		= iTopRight==1;
+		bool bTopLeft		= iTopLeft==1;
+		bool bBottomLeft	= iBottomLeft==1;
+		bool bCentre		= iCentre==1;
 		int type = (bBottom		?(1<<0):0)
 				|  (bRight		?(1<<1):0)
 				|  (bTop		?(1<<2):0)
@@ -158,7 +242,11 @@ public class CaveSpawner : MonoBehaviour
 			{
 				mFirstTime[ix,iy] = false;
 				bool[] bOccupied = new bool[8] {false, false, false, false, false, false, false, false };
-				piece.SetSpawners( turretObject, chanceOfTurret, ref bOccupied );
+				// only spawn if this is reachable
+				if((bReachable) || (spawnOutOfReach))
+				{
+					piece.SetSpawners( turretObject, chanceOfTurret, ref bOccupied );
+				}
 				piece.SetSpawners( crystalObject, chanceOfCrystal, ref bOccupied );
 			}
 		}
@@ -168,9 +256,9 @@ public class CaveSpawner : MonoBehaviour
 	int GetCell( int ix, int iy )
 	{
 		int cellValue = 1;	
-		if(    (ix>0)
+		if(    (ix>=0)
 			&& (ix<gridSizeX)
-			&& (iy>0)
+			&& (iy>=0)
 			&& (iy<gridSizeY))
 		{
 			cellValue = caveGrid[ix,iy];
