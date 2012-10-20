@@ -4,8 +4,10 @@ using System.Collections;
 public class Shoot : MonoBehaviour 
 {
 	public GameObject projectile;
+	public float reloadTime = 0.1f;
 	
 	private ProjectileLauncher mLauncher;
+	private float mSecondsSinceLaunch;
 		
 	void Start () 
 	{
@@ -14,8 +16,10 @@ public class Shoot : MonoBehaviour
 	
 	void FixedUpdate () 
 	{
-		if (Input.GetKeyDown (KeyCode.Space))
+		mSecondsSinceLaunch += Time.fixedDeltaTime;
+		if((Input.GetKey(KeyCode.Space)) && (mSecondsSinceLaunch>reloadTime))
 		{
+			mSecondsSinceLaunch = 0.0f;
 			if( null != mLauncher )
 			{
 				mLauncher.Shoot(projectile);
