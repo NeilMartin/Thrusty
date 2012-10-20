@@ -5,14 +5,11 @@ public class CavePiece : MonoBehaviour
 {
 	public Material 		visualMaterial;
 	public PhysicMaterial	physicMaterial;
-	/*private Vector3[] 	newVertices;
-	private Vector3[] 	newNormals;
-	private Vector2[] 	newUV;
-	private int[]		newTriangles;*/
-	private int         mType;
-	private int         mSeed;
-	private Material 	mVisualMaterial;
-	private float       mThickness;
+	
+	private int         	mType;
+	private int         	mSeed;
+	private Material 		mVisualMaterial;
+	private float       	mThickness;
 	private GameObject[]	mSpawn;
 	
 	private const int numVertsPerLength = 6;

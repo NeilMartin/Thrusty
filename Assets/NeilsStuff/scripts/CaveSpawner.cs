@@ -37,7 +37,7 @@ public class CaveSpawner : MonoBehaviour
 		centreGridPosX = gridSizeX/2;
 		centreGridPosY = gridSizeY/2;
 		GenerateCaveGrid();
-		SpawnGrid( 0.0f, 0.0f, drawRange, transform.position );
+		SpawnGrid( 0.0f, 0.0f, cellSize*Mathf.Max(gridSizeX,gridSizeY), transform.position );
 	}
 	
 	private void GenerateCaveGrid()
