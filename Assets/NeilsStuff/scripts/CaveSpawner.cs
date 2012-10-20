@@ -14,11 +14,11 @@ public class CaveSpawner : MonoBehaviour
 	public float thickness = 10.0f;
 	public float chanceOfCrystal = 0.0f;
 	public float chanceOfTurret = 0.0f;
+	public int gridSizeX = 30;
+	public int gridSizeY = 30;
 	
-	private static int gridSizeX = 30;
-	private static int gridSizeY = 30;
-	private static int centreGridPosX = gridSizeX/2;
-	private static int centreGridPosY = gridSizeY/2;
+	private int centreGridPosX;
+	private int centreGridPosY;
 	private static float cellSize = 10.0f;
 	private int[,] caveGrid;
 	private GameObject[,] cellObject;
@@ -34,6 +34,8 @@ public class CaveSpawner : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		centreGridPosX = gridSizeX/2;
+		centreGridPosY = gridSizeY/2;
 		GenerateCaveGrid();
 		SpawnGrid( 0.0f, 0.0f, drawRange, transform.position );
 	}
