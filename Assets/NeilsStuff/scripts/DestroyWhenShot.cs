@@ -63,4 +63,8 @@ public class DestroyWhenShot : MonoBehaviour
 		}
 	}
 	
+	public int GetHealthAsInt()
+	{
+		return (int)(health-mDamage);
+	}
 }

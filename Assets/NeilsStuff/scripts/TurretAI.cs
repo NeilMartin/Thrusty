@@ -22,23 +22,26 @@ public class TurretAI : MonoBehaviour
 		{
 			target =  GameObject.FindWithTag("Player");
 		}
-		if( mTimeUntilReady > 0.0f )
+		if( null != target )
 		{
-			mTimeUntilReady -= Time.deltaTime;
-		}
-		else
-		{
-			Vector3 targetOffset = target.transform.position - transform.position;
-			if(targetOffset.sqrMagnitude < range*range)
+			if( mTimeUntilReady > 0.0f )
 			{
-				if( mLauncher != null )
+				mTimeUntilReady -= Time.deltaTime;
+			}
+			else
+			{
+				Vector3 targetOffset = target.transform.position - transform.position;
+				if(targetOffset.sqrMagnitude < range*range)
 				{
-					mTimeUntilReady = reloadTime;
-					mLauncher.Shoot(projectile, target);
-				}
-				else
-				{
-					Debug.Log("TurretAI trying to shoot on an object with no Projectile launcher");
+					if( mLauncher != null )
+					{
+						mTimeUntilReady = reloadTime;
+						mLauncher.Shoot(projectile, target);
+					}
+					else
+					{
+						Debug.Log("TurretAI trying to shoot on an object with no Projectile launcher");
+					}
 				}
 			}
 		}

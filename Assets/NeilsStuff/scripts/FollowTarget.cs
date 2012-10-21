@@ -20,23 +20,37 @@ public class FollowTarget : MonoBehaviour
 	
 	void FixedUpdate()
 	{
-		Vector3 desiredPos = target.transform.position + mTargetOffset;
-		if( lookAheadScale > 0.0f )
+		if( target == null )
 		{
-			if( null != target.rigidbody )			
+			target = GameObject.FindWithTag("Player");
+			if( target != null )
 			{
-				//mSpeed = target.rigidbody.velocity.magnitude;
-				//Vector3 vOffset = target.rigidbody.velocity;
-				//vOffset.Normalize();
-				desiredPos +=  target.rigidbody.velocity * lookAheadScale;
+				mTargetOffset = transform.position - target.transform.position;
 			}
 		}
-		desiredPos = transform.position + ((desiredPos - transform.position)*camLag);
-		mCamOffset = desiredPos - target.transform.position;
+		if( target != null )
+		{
+			Vector3 desiredPos = target.transform.position + mTargetOffset;
+			if( lookAheadScale > 0.0f )
+			{
+				if( null != target.rigidbody )			
+				{
+					//mSpeed = target.rigidbody.velocity.magnitude;
+					//Vector3 vOffset = target.rigidbody.velocity;
+					//vOffset.Normalize();
+					desiredPos +=  target.rigidbody.velocity * lookAheadScale;
+				}
+			}
+			desiredPos = transform.position + ((desiredPos - transform.position)*camLag);
+			mCamOffset = desiredPos - target.transform.position;
+		}
 	}
 	
 	void LateUpdate () 
 	{
-		transform.position = target.transform.position + mCamOffset;
+		if( target != null )
+		{
+			transform.position = target.transform.position + mCamOffset;
+		}
 	}
 }

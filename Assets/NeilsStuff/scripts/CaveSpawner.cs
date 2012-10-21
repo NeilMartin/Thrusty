@@ -274,19 +274,21 @@ public class CaveSpawner : MonoBehaviour
 	
 	void FixedUpdate() 
 	{
-		float xpos = 0.0f;
-		float ypos = 0.0f;
+		if( player == null )
+		{
+			player = GameObject.FindWithTag("Player");	
+		}
 		if( player != null )
 		{
-			xpos = player.transform.position.x;
-			ypos = player.transform.position.y;
-		}
-		int cellPosX = centreGridPosX + (int)( xpos/cellSize );
-		int cellPosY = centreGridPosY + (int)( ypos/cellSize );
-		if(		( cellPosX != spawnedPosX ) 
-			|| 	( cellPosY != spawnedPosY ) )
-		{
-			SpawnGrid( xpos, ypos, drawRange, transform.position );
+			float xpos = player.transform.position.x;
+			float ypos = player.transform.position.y;
+			int cellPosX = centreGridPosX + (int)( xpos/cellSize );
+			int cellPosY = centreGridPosY + (int)( ypos/cellSize );
+			if(		( cellPosX != spawnedPosX ) 
+				|| 	( cellPosY != spawnedPosY ) )
+			{
+				SpawnGrid( xpos, ypos, drawRange, transform.position );
+			}
 		}
 	}
 
