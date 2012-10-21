@@ -26,35 +26,48 @@ public class DestroyWhenShot : MonoBehaviour
 		GameObject other = coll.gameObject;
 		Damager damager = other.GetComponent<Damager>();
 		float damage = 0.0f;
-		switch( faction )
+		if( null != damager )
 		{
-		case Faction.None:
-			damage = damager.damageAmount;
-			break;
-			
-		case Faction.Enemy:
+			switch( faction )
 			{
-				if(    ( damager.GetDamageType() == Damager.DamageType.DamageEnemyOnly )
-			   		|| ( damager.GetDamageType() == Damager.DamageType.DamageAll ))
+			case Faction.None:
+				damage = damager.damageAmount;
+				break;
+				
+			case Faction.Enemy:
 				{
-					damage = damager.damageAmount;	
+					if(    ( damager.GetDamageType() == Damager.DamageType.DamageEnemyOnly )
+				   		|| ( damager.GetDamageType() == Damager.DamageType.DamageAll ))
+					{
+						damage = damager.damageAmount;	
+					}
 				}
+				break;
+	
+			case Faction.Player:
+				{
+					if(    ( damager.GetDamageType() == Damager.DamageType.DamagePlayerOnly )
+				   		|| ( damager.GetDamageType() == Damager.DamageType.DamageAll ))
+					{
+						damage = damager.damageAmount;	
+					}
+				}
+				break;
+				
+			default:
+				Debug.LogError( "Unhandled case" );
+				break;
 			}
-			break;
-
-		case Faction.Player:
+		}
+		else // no damager, so perform velocity damage
+		{
+			float safeSpeed = 1.5f;
+			float speed = rigidbody.velocity.magnitude - safeSpeed;
+			if( speed > 0.0f )
 			{
-				if(    ( damager.GetDamageType() == Damager.DamageType.DamagePlayerOnly )
-			   		|| ( damager.GetDamageType() == Damager.DamageType.DamageAll ))
-				{
-					damage = damager.damageAmount;	
-				}
+				float damageScalar = 5.0f;
+				damage = speed * damageScalar;
 			}
-			break;
-			
-		default:
-			Debug.LogError( "Unhandled case" );
-			break;
 		}
 		mDamage += damage;
 		if( mDamage >= health )
