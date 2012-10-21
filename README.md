@@ -1,17 +1,21 @@
 #Thrusty
 
-A Unity project by Neil Martin. You can play it here...
+A Unity project by Neil Martin. Collect your fellow miners while avoiding or destroying the security systems.
+
+You can play it here...
 
 [http://vanpubs.com/thrusty](http://vanpubs.com/thrusty)
 
 
 Tasks
 
-- survivors
-- survivor hut
+- Miners
 - Shield
 - lives
-- main menu/ esc menu
+- game over screen
 - tally screen
+- main menu/ esc menu
 - multiple levels
+- improve the bullets
+- explosions
 

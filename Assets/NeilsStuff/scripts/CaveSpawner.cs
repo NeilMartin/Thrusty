@@ -6,6 +6,7 @@ public class CaveSpawner : MonoBehaviour
 	public GameObject cavePiece;
 	public GameObject turretObject;
 	public GameObject crystalObject;
+	public GameObject minerObject;
 	public GameObject player;
 	public Material material;
 	public float drawRange = 30.0f;
@@ -14,6 +15,7 @@ public class CaveSpawner : MonoBehaviour
 	public float thickness = 10.0f;
 	public float chanceOfCrystal = 0.0f;
 	public float chanceOfTurret = 0.0f;
+	public float chanceOfMiner = 0.0f;
 	public int gridSizeX = 30;
 	public int gridSizeY = 30;
 	public bool spawnOutOfReach = true;
@@ -248,6 +250,10 @@ public class CaveSpawner : MonoBehaviour
 					piece.SetSpawners( turretObject, chanceOfTurret, ref bOccupied );
 				}
 				piece.SetSpawners( crystalObject, chanceOfCrystal, ref bOccupied );
+				if(bReachable)
+				{
+					piece.SetSpawners( minerObject, chanceOfMiner, ref bOccupied );
+				}
 			}
 		}
 		return go;

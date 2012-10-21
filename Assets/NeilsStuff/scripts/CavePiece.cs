@@ -391,7 +391,7 @@ public class CavePiece : MonoBehaviour
 		{
 			for(int i=0;i<8;++i)
 			{
-				if( (bOccupied[i]==false) && CanSpawnInDir(i) && (Random.Range(0,100)<=chanceOfObj) )
+				if( (bOccupied[i]==false) && CanSpawnInDir(i) && (Random.Range(0,100)<chanceOfObj) )
 				{
 					SetSpawn(i,obj);
 					bOccupied[i] = true;

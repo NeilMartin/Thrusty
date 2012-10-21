@@ -7,6 +7,8 @@ public class CountMe : MonoBehaviour
 	{
 		None,
 		Turret,
+		MinerMining,
+		MinerCollected,
 		NumTypes,
 	};
 	
