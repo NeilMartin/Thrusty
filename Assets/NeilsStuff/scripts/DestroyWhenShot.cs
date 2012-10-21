@@ -7,6 +7,7 @@ public class DestroyWhenShot : MonoBehaviour
 	
 	public float health;
 	public Faction faction; 
+	public bool applyVelocityDamage = false;
 	
 	private float mDamage;
 	
@@ -21,7 +22,17 @@ public class DestroyWhenShot : MonoBehaviour
 	
 	}
 	
+	void OnTriggerEnter( Collision coll )
+	{
+		HandleCollision( coll );
+	}
+	
 	void OnCollisionEnter( Collision coll )
+	{
+		HandleCollision( coll );
+	}
+	
+	void HandleCollision( Collision coll )
 	{
 		GameObject other = coll.gameObject;
 		Damager damager = other.GetComponent<Damager>();
@@ -59,7 +70,7 @@ public class DestroyWhenShot : MonoBehaviour
 				break;
 			}
 		}
-		else // no damager, so perform velocity damage
+		else if (applyVelocityDamage) // no damager, so perform velocity damage
 		{
 			float safeSpeed = 2.0f;
 			float speed = rigidbody.velocity.magnitude - safeSpeed;

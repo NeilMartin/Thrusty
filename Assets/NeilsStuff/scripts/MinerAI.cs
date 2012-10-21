@@ -5,7 +5,6 @@ public class MinerAI : MonoBehaviour
 {
 	
 	public float goToShipRadius = 5.0f;
-	public float enterShipRadius = 0.3f;
 	public float idleDriftDistance = 1.0f;
 	public float speed = 1.0f;
 	
@@ -24,6 +23,7 @@ public class MinerAI : MonoBehaviour
 	private Vector3 mTargetPos;
 	private float mStateTimer;
 	private bool mbStateChanged;
+	private bool mbCollected;
 	
 	void Start () 
 	{
@@ -33,6 +33,11 @@ public class MinerAI : MonoBehaviour
 		mTargetPos = CalcTargetForState( mState );
 		mStateTimer = 0.0f;
 		mbStateChanged = false;
+	}
+	
+	public void SetCollected()
+	{
+		mbCollected = true;
 	}
 	
 	private void SetNextState( MinerState nextState )
@@ -194,7 +199,7 @@ public class MinerAI : MonoBehaviour
 					SetNextState( MinerState.Idle );
 					mTargetPos = CalcTargetForState(GetNextState());
 				}
-				else if( (null != mPlayer) && IsInRange( mPlayer.transform.position, enterShipRadius ) )
+				else if( mbCollected )
 				{
 					SetNextState( MinerState.EnterShip );
 				}
@@ -216,6 +221,12 @@ public class MinerAI : MonoBehaviour
 		vDesiredVelocity.Normalize();
 		vDesiredVelocity *= speed;
 		
+		Vector3 vDesiredUp = new Vector3(0.0f,1.0f,0.0f);
+		Vector3 vDesiredFacing = vDesiredVelocity;
+		Quaternion desiredRot = new Quaternion();
+		desiredRot.SetLookRotation( vDesiredFacing, vDesiredUp );
+		transform.rotation = desiredRot;
+			
 		Vector3 vVelChange = (vDesiredVelocity - rigidbody.velocity);
 		rigidbody.AddForce(vVelChange);
 	}
