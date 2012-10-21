@@ -61,7 +61,7 @@ public class DestroyWhenShot : MonoBehaviour
 		}
 		else // no damager, so perform velocity damage
 		{
-			float safeSpeed = 1.5f;
+			float safeSpeed = 2.0f;
 			float speed = rigidbody.velocity.magnitude - safeSpeed;
 			if( speed > 0.0f )
 			{

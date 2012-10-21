@@ -7,6 +7,7 @@ ModelImporter:
     4300004: Cube_002
     4300006: Cube_001
     4300008: Cube
+    4300010: Cube_000
     7400000: Default Take //// crystal
   serializedVersion: 10
   materials:
@@ -52,20 +53,7 @@ ModelImporter:
       data:
         first: 111
         second: 605fa900
-    Cube:
-      data:
-        first: 1
-        second: a8860100
-      data:
-        first: 4
-        second: 881a0600
-      data:
-        first: 23
-        second: 68182300
-      data:
-        first: 33
-        second: a85a3200
-    Cube_001:
+    Cube_000:
       data:
         first: 1
         second: a0860100
@@ -78,19 +66,6 @@ ModelImporter:
       data:
         first: 33
         second: a05a3200
-    Cube_002:
-      data:
-        first: 1
-        second: a6860100
-      data:
-        first: 4
-        second: 861a0600
-      data:
-        first: 23
-        second: 66182300
-      data:
-        first: 33
-        second: a65a3200
     Cube_003:
       data:
         first: 1
@@ -104,16 +79,3 @@ ModelImporter:
       data:
         first: 33
         second: a25a3200
-    Cube_004:
-      data:
-        first: 1
-        second: a4860100
-      data:
-        first: 4
-        second: 841a0600
-      data:
-        first: 23
-        second: 64182300
-      data:
-        first: 33
-        second: a45a3200
