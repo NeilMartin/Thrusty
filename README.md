@@ -9,12 +9,9 @@ You can play it here...
 
 Tasks
 
-- explosion on damage
-- brighter ship
-- move the hud to the four corners
-- turrets to fire volley of 3
-- reduce gravity and add thrust curve
 - Shield
+- fuel
+- turrets to fire volley of 3
 - lives
 - game over screen
 - tally screen

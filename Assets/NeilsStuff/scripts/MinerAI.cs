@@ -59,25 +59,32 @@ public class MinerAI : MonoBehaviour
 		return targetPos;
 	}
 
-	private Vector3 CalcCrystalTarget()
+	private Vector3 CalcCrystalTarget( bool bFindClosest )
 	{
 		GameObject[] gos = GameObject.FindGameObjectsWithTag("MinerPointOfInterest");
 		Vector3 targetPos = gameObject.transform.position;
 		if( gos.Length > 0 )
 		{
 			targetPos = gos[0].transform.position;	
-			if( gos.Length > 2 )
+			if( gos.Length > 1 )
 			{
-				float fMinDistSqrd = (gameObject.transform.position - targetPos).sqrMagnitude;
-				for( int i=1; i<gos.Length; ++i )
+				if( bFindClosest )
 				{
-					Vector3 testTargetPos = gos[i].transform.position;	
-					float fTestDistSqrd = (gameObject.transform.position - testTargetPos).sqrMagnitude;	
-					if( fTestDistSqrd < fMinDistSqrd )
+					float fMinDistSqrd = (gameObject.transform.position - targetPos).sqrMagnitude;
+					for( int i=1; i<gos.Length; ++i )
 					{
-						targetPos = testTargetPos;
-						fMinDistSqrd = fTestDistSqrd;
+						Vector3 testTargetPos = gos[i].transform.position;	
+						float fTestDistSqrd = (gameObject.transform.position - testTargetPos).sqrMagnitude;	
+						if( fTestDistSqrd < fMinDistSqrd )
+						{
+							targetPos = testTargetPos;
+							fMinDistSqrd = fTestDistSqrd;
+						}
 					}
+				}
+				else
+				{
+					targetPos = gos[Random.Range(0,gos.Length-1)].transform.position;
 				}
 			}
 		}
@@ -95,8 +102,11 @@ public class MinerAI : MonoBehaviour
 			break;
 
 		case MinerState.TeleportToCrystal:
+			targetPos = CalcCrystalTarget(false);
+			break;
+			
 		case MinerState.GoToCrystal:
-			targetPos = CalcCrystalTarget();
+			targetPos = CalcCrystalTarget(true);
 			break;
 			
 		case MinerState.GoToShip:

@@ -8,11 +8,19 @@ public class ShipController : MonoBehaviour
 	public GameObject rightSupport;
     
     public float forwardAcc = 10f;
+	public float topSpeed = 10f;
 	public float turnPower = 100f;
 	public float turnsPerSecond = 0.5f;
- 
+	public float thrustFuelPerSecond = 2.0f;
+	public float shieldFuelPerSecond = 5.0f;
+ 	public GameObject projectile;
+	public float reloadTime = 0.1f;
+	
+	private ProjectileLauncher mLauncher;
+	private float mSecondsSinceLaunch;
 	private bool mbIsGrounded = true;
 	private float mSpinPower = 0.0f;
+	private float mFuel = 1000.0f;
 	
 	public bool IsGrounded()
 	{
@@ -23,11 +31,17 @@ public class ShipController : MonoBehaviour
 	{
 		return mSpinPower;
 	}
+
+	public float GetFuelRemaining()
+	{
+		return mFuel;
+	}
 	
 	// Use this for initialization
 	void Start () 
 	{
 		rigidbody.centerOfMass.Set( 0.0f, 0.0f, 0.0f );
+		mLauncher = gameObject.GetComponent<ProjectileLauncher>();
 	}
 	
 	float CalcHeightAboveGround( GameObject obj, float length, float radius )
@@ -82,8 +96,33 @@ public class ShipController : MonoBehaviour
 		
 		// thrust controls
 		float thrust = Mathf.Clamp(Input.GetAxis("Vertical"), 0.0f, 1.0f);
+		mFuel -= thrust * thrustFuelPerSecond * Time.fixedDeltaTime;		
 		Vector3 dir = transform.up;
-		spinnerRigidbody.AddForce( dir * thrust * forwardAcc * scalerFix );
+		float fCurrSpeed = Vector3.Dot(rigidbody.velocity, dir);
+		float powerScale = (topSpeed-fCurrSpeed)/topSpeed;
+		spinnerRigidbody.AddForce( dir * thrust * forwardAcc * scalerFix * powerScale );
+		
+		// shield controls
+		bool bShield = Input.GetAxis("Vertical") < -0.1f;
+		if( bShield )
+		{
+			mFuel -= shieldFuelPerSecond * Time.fixedDeltaTime;		
+		}
+
+		// shoot controls
+		mSecondsSinceLaunch += Time.fixedDeltaTime;
+		if((Input.GetKey(KeyCode.Space)) && (mSecondsSinceLaunch>reloadTime) && (false==bShield))
+		{
+			mSecondsSinceLaunch = 0.0f;
+			if( null != mLauncher )
+			{
+				mLauncher.Shoot(projectile);
+			}
+			else
+			{
+				Debug.Log("trying to shoot on an object that doesn't have a launcher");
+			}
+		}
     }
 }
 
