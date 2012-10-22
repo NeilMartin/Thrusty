@@ -3,13 +3,23 @@ using System.Collections;
 
 public class Damager : MonoBehaviour 
 {
-	public enum DamageType { None, DamageEnemyOnly, DamagePlayerOnly, DamageAll }
-	
-	public float damageAmount;
-	public DamageType type;
+	public float damageAmount = 5.0f;
+	public bool damagePlayer = false;
+	public bool damageMiner = false;
+	public bool damageTurret = true;
 		
-	public DamageType GetDamageType()
+	public float GetDamageToPlayer()
 	{
-		return type;
+		return damagePlayer?damageAmount:0.0f;
+	}
+	
+	public float GetDamageToMiner()
+	{
+		return damageMiner?damageAmount:0.0f;
+	}
+
+	public float GetDamageToTurret()
+	{
+		return damageTurret?damageAmount:0.0f;
 	}
 }

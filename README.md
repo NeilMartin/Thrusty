@@ -9,7 +9,12 @@ You can play it here...
 
 Tasks
 
-- Miners
+- miners cause damage
+- explosion on damage
+- brighter ship
+- move the hud to the four corners
+- turrets to fire volley of 3
+- reduce gravity and add thrust curve
 - Shield
 - lives
 - game over screen

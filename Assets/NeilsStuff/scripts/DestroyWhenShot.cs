@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DestroyWhenShot : MonoBehaviour 
 {
-	public enum Faction { None, Enemy, Player };
+	public enum Faction { None, Turret, Player, Miner };
 	
 	public float health;
 	public Faction faction; 
@@ -22,9 +22,9 @@ public class DestroyWhenShot : MonoBehaviour
 	
 	}
 	
-	void OnTriggerEnter( Collision coll )
+	void OnTriggerEnter( Collider coll )
 	{
-		HandleCollision( coll );
+		//HandleCollision( coll );
 	}
 	
 	void OnCollisionEnter( Collision coll )
@@ -45,24 +45,16 @@ public class DestroyWhenShot : MonoBehaviour
 				damage = damager.damageAmount;
 				break;
 				
-			case Faction.Enemy:
-				{
-					if(    ( damager.GetDamageType() == Damager.DamageType.DamageEnemyOnly )
-				   		|| ( damager.GetDamageType() == Damager.DamageType.DamageAll ))
-					{
-						damage = damager.damageAmount;	
-					}
-				}
+			case Faction.Turret:
+				damage = damager.GetDamageToTurret();
 				break;
 	
 			case Faction.Player:
-				{
-					if(    ( damager.GetDamageType() == Damager.DamageType.DamagePlayerOnly )
-				   		|| ( damager.GetDamageType() == Damager.DamageType.DamageAll ))
-					{
-						damage = damager.damageAmount;	
-					}
-				}
+				damage = damager.GetDamageToPlayer();
+				break;
+				
+			case Faction.Miner:
+				damage = damager.GetDamageToMiner();
 				break;
 				
 			default:
