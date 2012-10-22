@@ -106,8 +106,9 @@ public class ShipController : MonoBehaviour
 		bool bShield = Input.GetAxis("Vertical") < -0.1f;
 		if( bShield )
 		{
-			mFuel -= shieldFuelPerSecond * Time.fixedDeltaTime;		
+			mFuel -= shieldFuelPerSecond * Time.fixedDeltaTime;	
 		}
+		gameObject.SendMessage( "EnableShield", bShield );
 
 		// shoot controls
 		mSecondsSinceLaunch += Time.fixedDeltaTime;

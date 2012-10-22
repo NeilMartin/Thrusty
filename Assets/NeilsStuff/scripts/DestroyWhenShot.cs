@@ -9,6 +9,7 @@ public class DestroyWhenShot : MonoBehaviour
 	public Faction faction; 
 	public bool applyVelocityDamage = false;
 	public GameObject damageEffect = null;
+	public bool bShieldActive = false;
 	
 	private float mDamage;
 	
@@ -23,6 +24,11 @@ public class DestroyWhenShot : MonoBehaviour
 	
 	}
 	
+	void EnableShield( bool bEnable )
+	{
+		bShieldActive = bEnable;
+	}
+	
 	void OnTriggerEnter( Collider coll )
 	{
 		//HandleCollision( coll );
@@ -35,6 +41,9 @@ public class DestroyWhenShot : MonoBehaviour
 	
 	void HandleCollision( Collision coll )
 	{
+		if( bShieldActive )
+			return;
+		
 		GameObject other = coll.gameObject;
 		Damager damager = other.GetComponent<Damager>();
 		float damage = 0.0f;
@@ -73,6 +82,11 @@ public class DestroyWhenShot : MonoBehaviour
 				damage = speed * damageScalar;
 			}
 		}
+		ApplyDamage( damage );
+	}
+	
+	void ApplyDamage( float damage )
+	{
 		if(( damage > 0.0f ) && (null != damageEffect))
 		{
 			Instantiate( damageEffect, transform.position, transform.rotation );
