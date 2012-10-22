@@ -58,6 +58,7 @@
      <Compile Include="Assets\NeilsStuff\scripts\MinerAI.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\MinerCollector.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ProjectileLauncher.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\ShieldActivator.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ShipController.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\Shoot.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\TurretAI.cs" />
