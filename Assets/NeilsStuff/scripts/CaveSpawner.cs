@@ -249,9 +249,9 @@ public class CaveSpawner : MonoBehaviour
 				{
 					piece.SetSpawners( turretObject, chanceOfTurret, ref bOccupied );
 				}
-				piece.SetSpawners( crystalObject, chanceOfCrystal, ref bOccupied );
 				if(bReachable)
 				{
+					piece.SetSpawners( crystalObject, chanceOfCrystal, ref bOccupied );
 					piece.SetSpawners( minerObject, chanceOfMiner, ref bOccupied );
 				}
 			}

@@ -29,6 +29,10 @@ public class GlobalCounter
 		if((iType>=0) && (iType<Instance.mCounters.Length))
 		{
 			Instance.mCounters[iType] += incValue;
+			if( Instance.mCounters[iType] < 0 )
+			{
+				Instance.mCounters[iType] = 0;
+			}
 		}
 		else
 		{
@@ -59,6 +63,14 @@ public class GlobalCounter
 			Debug.LogError("Type "+iType+" out of range");
 		}
 		return count;
+	}
+	
+	public static void ResetCounters()
+	{
+		for( int i=0; i<Instance.mCounters.Length; ++i )
+		{
+			Instance.mCounters[i] = 0;
+		}
 	}
 
 }

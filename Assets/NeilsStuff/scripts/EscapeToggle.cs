@@ -10,6 +10,17 @@ public class EscapeToggle : MonoBehaviour
 	void Start () 
 	{
 		toggleObject.SetActiveRecursively( startActive );
+		if( pauseGame )
+		{
+			if( toggleObject.active )
+			{
+				Time.timeScale = 1.0f;
+			}
+			else
+			{
+				Time.timeScale = 0.0f;
+			}
+		}
 	}
 	
 	void OnGUI()
