@@ -4,10 +4,12 @@ using System.Collections;
 public class EscapeToggle : MonoBehaviour 
 {
 	public GameObject toggleObject;
-
+	public bool startActive = false;
+	public bool pauseGame = false;
+	
 	void Start () 
 	{
-		toggleObject.SetActiveRecursively( false );
+		toggleObject.SetActiveRecursively( startActive );
 	}
 	
 	void OnGUI()
@@ -21,16 +23,28 @@ public class EscapeToggle : MonoBehaviour
 		{
 			if( null != toggleObject )
 			{
-				if( toggleObject.active )
-				{
-					Time.timeScale = 1.0f;
-				}
-				else
-				{
-					Time.timeScale = 0.0f;
-				}
 				toggleObject.SetActiveRecursively( !toggleObject.active );
+				if( pauseGame )
+				{
+					if( toggleObject.active )
+					{
+						Time.timeScale = 1.0f;
+					}
+					else
+					{
+						Time.timeScale = 0.0f;
+					}
+				}
 			}
+		}
+	}
+	
+	void ResumeGame()
+	{
+		toggleObject.SetActiveRecursively( startActive );
+		if( pauseGame )
+		{
+			Time.timeScale = 1.0f;
 		}
 	}
 }

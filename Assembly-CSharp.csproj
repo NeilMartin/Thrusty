@@ -56,6 +56,7 @@
      <Compile Include="Assets\NeilsStuff\scripts\FuelGUI.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\GlobalCounter.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\HealthGUI.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\LoadLevelOnClick.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\MinerAI.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\MinerCollector.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ProjectileLauncher.cs" />
