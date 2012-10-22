@@ -8,6 +8,7 @@ public class DestroyWhenShot : MonoBehaviour
 	public float health;
 	public Faction faction; 
 	public bool applyVelocityDamage = false;
+	public GameObject damageEffect = null;
 	
 	private float mDamage;
 	
@@ -71,6 +72,10 @@ public class DestroyWhenShot : MonoBehaviour
 				float damageScalar = 5.0f;
 				damage = speed * damageScalar;
 			}
+		}
+		if(( damage > 0.0f ) && (null != damageEffect))
+		{
+			Instantiate( damageEffect, transform.position, transform.rotation );
 		}
 		mDamage += damage;
 		if( mDamage >= health )

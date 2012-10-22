@@ -9,7 +9,6 @@ You can play it here...
 
 Tasks
 
-- miners cause damage
 - explosion on damage
 - brighter ship
 - move the hud to the four corners
