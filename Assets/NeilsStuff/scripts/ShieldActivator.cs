@@ -20,4 +20,14 @@ public class ShieldActivator : MonoBehaviour
 			shieldObject.active = bActive;
 		}
 	}
+	
+	void Update()
+	{
+		if( ( null != shieldObject ) && ( shieldObject.active ))
+		{
+			shieldObject.transform.rotation.SetLookRotation( new Vector3( 	Random.Range( -1.0f, 1.0f ),
+																			Random.Range( -1.0f, 1.0f ),
+																			Random.Range( -1.0f, 1.0f ) ) );
+		}
+	}
 }

@@ -9,8 +9,6 @@ You can play it here...
 
 Tasks
 
-- Shield
-- fuel
 - turrets to fire volley of 3
 - lives
 - game over screen

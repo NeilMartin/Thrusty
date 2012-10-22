@@ -51,6 +51,7 @@
      <Compile Include="Assets\NeilsStuff\scripts\Damager.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\DestroyAfterTime.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\DestroyWhenShot.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\EscapeToggle.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\FollowTarget.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\FuelGUI.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\GlobalCounter.cs" />
