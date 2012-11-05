@@ -2,9 +2,10 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class State : TreeNode
 {
-	string mName;
+	public string mName;
 	
 	public State( string name )
 	{

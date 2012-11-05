@@ -4,18 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-
+[System.Serializable]
 public class BehaviourTree : MonoBehaviour 
 {
 	public GameObject states = null;
-	
+	public GUIArray mNodeArray;
+	public ActionTypes actionType = ActionTypes.None;
+
 	private GameObject mCurrState;
 	
-	private GUIArray mNodeArray;
 	private string mNewStateName;
 	private bool mEditingNewStateString;
 	
-	private ActionTypes actionType = ActionTypes.None;
 	
 	public BehaviourTree()
 	{

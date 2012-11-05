@@ -4,9 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+[System.Serializable]
 public class GUIArray: ScriptableObject
 {
-	private List<TreeNode> mNodes;
+	public List<TreeNode> mNodes;
 	
 	public GUIArray()
 	{
