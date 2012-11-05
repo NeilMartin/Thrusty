@@ -23,9 +23,23 @@ public class GUIArray: ScriptableObject
 	public void AddInspectorGUI()
 	{
 		EditorGUILayout.LabelField("size = " + mNodes.Count );
+		TreeNode deleteMe = null;
 		foreach( TreeNode node in mNodes )
 		{
+			EditorGUILayout.BeginHorizontal();
+			Rect r = EditorGUILayout.BeginHorizontal ("Button",  GUILayout.MaxWidth(32));
+            if (GUI.Button (r, GUIContent.none ))
+			{
+				deleteMe = node;
+			}
+			GUILayout.Label ("del");  
+        	EditorGUILayout.EndHorizontal ();
 			node.AddInspectorGUI();
+			EditorGUILayout.EndHorizontal ();
+		}
+		if( null != deleteMe )
+		{
+			mNodes.Remove(deleteMe);
 		}
 	}
 	
