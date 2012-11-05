@@ -11,40 +11,51 @@ public class GUIArray: ScriptableObject
 	
 	public GUIArray()
 	{
-		Debug.Log("GUIArray CTOR" );
-		Initialize();
 	}
 	
 	public void Initialize()
 	{
+		Debug.Log("GUIArray INIT" );
 		mNodes = new List<TreeNode>();
 	}
 	
 	public void AddInspectorGUI()
 	{
-		EditorGUILayout.LabelField("size = " + mNodes.Count );
-		TreeNode deleteMe = null;
-		foreach( TreeNode node in mNodes )
+		if(null == mNodes)
 		{
-			EditorGUILayout.BeginHorizontal();
-			Rect r = EditorGUILayout.BeginHorizontal ("Button",  GUILayout.MaxWidth(32));
-            if (GUI.Button (r, GUIContent.none ))
-			{
-				deleteMe = node;
-			}
-			GUILayout.Label ("del");  
-        	EditorGUILayout.EndHorizontal ();
-			node.AddInspectorGUI();
-			EditorGUILayout.EndHorizontal ();
+			EditorGUILayout.LabelField("size = 0");
 		}
-		if( null != deleteMe )
+		else
 		{
-			mNodes.Remove(deleteMe);
+			EditorGUILayout.LabelField("size = " + mNodes.Count );
+			TreeNode deleteMe = null;
+			foreach( TreeNode node in mNodes )
+			{
+				EditorGUILayout.BeginHorizontal();
+				Rect r = EditorGUILayout.BeginHorizontal ("Button",  GUILayout.MaxWidth(32));
+	            if (GUI.Button (r, GUIContent.none ))
+				{
+					deleteMe = node;
+				}
+				GUILayout.Label ("del");  
+	        	EditorGUILayout.EndHorizontal ();
+				node.AddInspectorGUI();
+				EditorGUILayout.EndHorizontal ();
+			}
+			if( null != deleteMe )
+			{
+				mNodes.Remove(deleteMe);
+				DestroyImmediate(deleteMe);
+			}
 		}
 	}
 	
 	public void Add( TreeNode node )
 	{
+		if(null==mNodes)
+		{
+			Initialize();
+		}
 		mNodes.Add( node );
 		Debug.Log("Adding Node, count = " + mNodes.Count );
 	}

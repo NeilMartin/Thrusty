@@ -82,10 +82,6 @@ public class BehaviourTree : MonoBehaviour
 			Debug.Log("creating GUIArray" );
 			mNodeArray = (GUIArray)ScriptableObject.CreateInstance( "GUIArray" );
 		}
-		if(null!=mNodeArray)
-		{
-			Debug.Log("GUIArray CREATED" );
-		}
 		mNodeArray.Add( newState );
 	}
 
