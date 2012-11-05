@@ -44,8 +44,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\NeilsStuff\scripts\Action.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\BehaviourTree.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\CavePiece.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\CaveSpawner.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\Condition.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\CountMe.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\CounterGUI.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\Damager.cs" />
@@ -54,6 +57,7 @@
      <Compile Include="Assets\NeilsStuff\scripts\EscapeToggle.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\FollowTarget.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\FuelGUI.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\GUIArray.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\GlobalCounter.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\HealthGUI.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\LoadLevelOnClick.cs" />
@@ -63,6 +67,10 @@
      <Compile Include="Assets\NeilsStuff\scripts\ShieldActivator.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\ShipController.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\Shoot.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\State.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\StateThing.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\Transition.cs" />
+     <Compile Include="Assets\NeilsStuff\scripts\TreeNode.cs" />
      <Compile Include="Assets\NeilsStuff\scripts\TurretAI.cs" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
      <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />

@@ -9,12 +9,9 @@ You can play it here...
 
 Tasks
 
-- turrets to fire volley of 3
-- lives
-- game over screen
 - tally screen
-- main menu/ esc menu
-- multiple levels
+- game over screen
+- turrets to fire volley of 3
 - improve the bullets
 - explosions
 
